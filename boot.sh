@@ -38,7 +38,7 @@ pacman -Sy --noconfirm
 
 # 2. Update System
 echo "[2/13] Performing full system update..."
-pacman -SYu --noconfirm
+pacman -Syu --noconfirm
 
 # 3. Install Build Tools
 echo "[3/13] Installing base-devel and cmake..."
