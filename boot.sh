@@ -34,9 +34,6 @@ if ! grep -q "^ILoveCandy" /etc/pacman.conf; then
 fi
 # Robust Multilib enable
 sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf
-pacman -Sy --noconfirm
-
-# 2. Update System
 echo "[2/13] Performing full system update..."
 pacman -Syu --noconfirm
 
