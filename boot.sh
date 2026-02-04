@@ -44,29 +44,11 @@ pacman -Syu --noconfirm
 echo "[3/13] Installing base-devel and cmake..."
 pacman -S --needed --noconfirm base-devel cmake
 
-# 4. Install YAY
-echo "[4/13] Installing YAY AUR Helper..."
-BUILD_DIR="/tmp/yay-bin"
-rm -rf "$BUILD_DIR"
-git clone https://aur.archlinux.org/yay-bin.git "$BUILD_DIR"
-cd "$BUILD_DIR"
-# Change ownership so the user can build it safely
-chown -R "$USER_NAME":"$USER_NAME" "$BUILD_DIR"
-# Build as user
-runuser -u "$USER_NAME" -- makepkg --noconfirm
-# Install the resulting package as root
-pacman -U --noconfirm $(makepkg --packagelist)
-cd /
-rm -rf "$BUILD_DIR"
-# Initialize yay as the user
-runuser -u "$USER_NAME" -- yay -Y --gendb
-runuser -u "$USER_NAME" -- yay -Y --devel --save
-
-# 5. Install Drivers (Nvidia 580xx)
+# 4. Install Drivers (Nvidia 580xx)
 echo "[5/13] Installing Nvidia drivers (580xx series)..."
 runuser -u "$USER_NAME" -- yay -S --noconfirm --needed dkms linux-headers nvidia-580xx-utils nvidia-580xx-dkms lib32-nvidia-580xx-utils
 
-# 6. Install Essential Utilities
+# 5. Install Essential Utilities
 echo "[6/13] Installing FFmpeg, 7zip, Ark, Flatpak, and UFW..."
 pacman -S --noconfirm ffmpeg p7zip ark flatpak ufw
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -75,15 +57,15 @@ ufw default allow outgoing
 ufw enable
 systemctl enable ufw.service
 
-# 7. Install GUI Applications
+# 6. Install GUI Applications
 echo "[7/13] Installing GUI Applications..."
 runuser -u "$USER_NAME" -- yay -S --noconfirm floorp-bin localsend-bin seanime-denshi-git hydra-launcher-bin bazaar kitty obsidian code neovim kio-admin
 
-# 8. Install CLI Tools
+# 7. Install CLI Tools
 echo "[8/13] Installing CLI Tools..."
 runuser -u "$USER_NAME" -- yay -S --noconfirm zsh fzf zoxide eza starship bat ripgrep
 
-# 9. Install Oh My Zsh
+# 8. Install Oh My Zsh
 echo "[9/13] Installing Oh My Zsh..."
 # We run this as the user to set up their home directory correctly
 runuser -u "$USER_NAME" -- sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
