@@ -13,11 +13,7 @@ echo "============================================="
 
 # 1. Install Essential Packages
 echo "[1/5] Installing base packages (Grub, Vim, Git, Reflector, Partition Manager)..."
-pacman -S --noconfirm grub os-prober neovim ntfs-3g curl perl git dosfstools mtools partitionmanager reflector
-
-# 2. Configure Fastest Mirrors using Reflector
-echo "[2/5] Setting up mirrors (India, Singapore)..."
-reflector --country 'India' --country 'Singapore' --latest 20 --sort rate --save /etc/pacman.d/mirrorlist
+pacman -S --noconfirm grub os-prober neovim ntfs-3g curl perl git dosfstools mtools partitionmanager
 
 # 3. Configure GRUB Settings
 echo "[3/5] Tweaking /etc/default/grub (Timeout & OS-Prober)..."
