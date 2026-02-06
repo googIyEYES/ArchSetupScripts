@@ -18,30 +18,30 @@ echo "Phase 2: First Boot Setup"
 echo "Running as root. Installing apps for user: $USER_NAME"
 echo "============================================="
 
-# --- AUTOMATION FIX: Allow user to run pacman without password temporarily ---
-# This prevents yay (running as user) from asking for a password during install.
+# Allowing to run pacman without password temporarily ---
+# This section prevents yay (running as user) from asking for a password during install.
 SUDOERS_FILE="/etc/sudoers.d/99_temp_yay_nopasswd"
 echo "$USER_NAME ALL=(ALL) NOPASSWD: /usr/bin/pacman" > "$SUDOERS_FILE"
 chmod 0440 "$SUDOERS_FILE"
 echo "Temporary sudo permission granted for pacman."
 # --------------------------------------------------------------------------------
 
-# 1. Pacman Configuration (Color, ILoveCandy, Multilib)
+# 1. Doing Some Pacman Configuration (Color, ILoveCandy, Multilib)
 echo "[1/13] Tweaking Pacman configuration..."
 sed -i 's/^#Color/Color/' /etc/pacman.conf
 if ! grep -q "^ILoveCandy" /etc/pacman.conf; then
   sed -i '/^Color/a ILoveCandy' /etc/pacman.conf
 fi
-# Robust Multilib enable
+# Enabling Multilib Repo
 sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf
 echo "[2/13] Performing full system update..."
 pacman -Syu --noconfirm
 
-# 3. Install Build Tools
+# 3. Installing Build Tools
 echo "[3/13] Installing base-devel and cmake..."
 pacman -S --needed --noconfirm base-devel cmake
 
-# 4. Install Drivers (Nvidia 580xx)
+# 4. Installing Drivers (Nvidia 580xx these are only foro 600/700 Series with Kepler Architecture)
 echo "[5/13] Installing Nvidia drivers (580xx series)..."
 runuser -u "$USER_NAME" -- yay -S --noconfirm --needed dkms linux-headers nvidia-580xx-utils nvidia-580xx-dkms lib32-nvidia-580xx-utils
 
@@ -54,15 +54,15 @@ ufw default allow outgoing
 ufw enable
 systemctl enable ufw.service
 
-# 6. Install GUI Applications
+# 6. Installing GUI Applications
 echo "[7/13] Installing GUI Applications..."
 runuser -u "$USER_NAME" -- yay -S --noconfirm floorp-bin localsend-bin seanime-denshi-git hydra-launcher-bin bazaar kitty obsidian code neovim kio-admin
 
-# 7. Install CLI Tools
+# 7. Installing CLI Tools
 echo "[8/13] Installing CLI Tools..."
 runuser -u "$USER_NAME" -- yay -S --noconfirm zsh fzf zoxide eza starship bat ripgrep
 
-# 8. Install Oh My Zsh
+# 8. Installing Oh My Zsh
 echo "[9/13] Installing Oh My Zsh..."
 # We run this as the user to set up their home directory correctly
 runuser -u "$USER_NAME" -- sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
